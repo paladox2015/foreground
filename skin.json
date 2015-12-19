@@ -23,7 +23,7 @@
 	},
 	"ResourceModules": {
 		"skins.foreground.styles": {
-			"position": "top",
+			"position": "bottom",
 			"styles": [
 				"assets/stylesheets/normalize.css",
 				"assets/stylesheets/font-awesome.css",
@@ -33,11 +33,15 @@
 				"assets/stylesheets/jquery.autocomplete.css"
 			]
 		},
-		"skins.foreground.js": {
+		"skins.foreground.modernizr": {
 			"position": "top",
 			"scripts": [
-				"assets/scripts/vendor/jquery.cookie.foreground.js",
-				"assets/scripts/vendor/modernizr.js",
+				"assets/scripts/vendor/modernizr.js"
+			]
+		},
+		"skins.foreground.js": {
+			"position": "bottom",
+			"scripts": [
 				"assets/scripts/vendor/fastclick.js",
 				"assets/scripts/vendor/placeholder.js",
 				"assets/scripts/foundation/foundation.js",
@@ -57,7 +61,12 @@
 				"assets/scripts/foundation/foundation.alert.js",
 				"assets/scripts/foundation/foundation.accordion.js",
 				"assets/scripts/foundation/foundation.abide.js",
-				"foreground/assets/scripts/foreground.js"
+				"assets/scripts/foreground.js"
+			],
+			"dependencies": [
+				"jquery.cookie",
+				"skins.foreground.modernizr",
+				"skins.foreground.styles"
 			]
 		}
 	},

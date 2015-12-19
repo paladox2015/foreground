@@ -1,5 +1,7 @@
 ## Version 2.0
 * [new] upgraded foundation from foundation 4 to foundation 5.
+* [new] The desgn has a new colour scheme by default because of the update to foundation 5. It is now matt black.
+* [bug] Fixed dropdown because of the update to foundation 5.
 
 ## Version 1.2
 

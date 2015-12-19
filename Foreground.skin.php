@@ -52,7 +52,7 @@ class Skinforeground extends SkinTemplate {
 
 		$viewport_meta = 'width=device-width, user-scalable=yes, initial-scale=1.0';
 	  $out->addMeta('viewport', $viewport_meta);
-		$out->addModuleScripts('skins.foreground.js');
+		$out->addModules( array( 'skins.foreground.js', 'skins.foreground.modernizr' ) );
 	}
 
 }
@@ -103,7 +103,7 @@ class foregroundTemplate extends BaseTemplate {
 		}
 ?>
 <!-- START FOREGROUNDTEMPLATE -->
-		<nav class="top-bar">
+		<nav class="top-bar" data-topbar="true" data-options="is_hover: true">
 			<ul class="title-area">
 				<li class="name">
 					<h1 class="title-name">
@@ -125,7 +125,7 @@ class foregroundTemplate extends BaseTemplate {
 			<ul id="top-bar-left" class="left">
 				<li class="divider"></li>
 					<?php foreach ( $this->getSidebar() as $boxName => $box ) { if ( ($box['header'] != wfMessage( 'toolbox' )->text())  ) { ?>
-				<li class="has-dropdown active"  id='<?php echo Sanitizer::escapeId( $box['id'] ) ?>'<?php echo Linker::tooltip( $box['id'] ) ?>>
+				<li class="has-dropdown" id='<?php echo Sanitizer::escapeId( $box['id'] ) ?>'<?php echo Linker::tooltip( $box['id'] ) ?>>
 					<a href="#"><?php echo htmlspecialchars( $box['header'] ); ?></a>
 						<?php if ( is_array( $box['content'] ) ) { ?>
 							<ul class="dropdown">
@@ -138,7 +138,7 @@ class foregroundTemplate extends BaseTemplate {
 			<ul id="top-bar-right" class="right">
 				<li class="has-form">
 					<form action="<?php $this->text( 'wgScript' ); ?>" id="searchform" class="mw-search">
-						<div class="row">
+						<div class="row collapse">
 						<div class="small-12 columns">
 							<?php echo $this->makeSearchInput(array('placeholder' => wfMessage('searchsuggest-search')->text(), 'id' => 'searchInput') ); ?>
 							<button type="submit" class="button search"><?php echo wfMessage( 'search' )->text() ?></button>
@@ -149,7 +149,7 @@ class foregroundTemplate extends BaseTemplate {
 				<li class="divider show-for-small"></li>
 				<li class="has-form">
 
-				<li class="has-dropdown active"><a href="#"><i class="fa fa-cogs"></i></a>
+				<li class="has-dropdown"><a href="#"><i class="fa fa-cogs"></i></a>
 					<ul id="toolbox-dropdown" class="dropdown">
 						<?php foreach ( $this->getToolbox() as $key => $item ) { echo $this->makeListItem($key, $item); } ?>
 						<?php if ($wgForegroundFeatures['showRecentChangesUnderTools']): ?><li id="n-recentchanges"><?php echo Linker::specialLink('Recentchanges') ?></li><?php endif; ?>
@@ -158,7 +158,7 @@ class foregroundTemplate extends BaseTemplate {
 				</li>
 
 				<?php if ($wgUser->isLoggedIn()): ?>
-				<li id="personal-tools-dropdown" class="has-dropdown active"><a href="#"><i class="fa fa-user"></i></a>
+				<li id="personal-tools-dropdown" class="has-dropdown"><a href="#"><i class="fa fa-user"></i></a>
 					<ul class="dropdown">
 						<?php foreach ( $this->getPersonalTools() as $key => $item ) { echo $this->makeListItem($key, $item); } ?>
 					</ul>
@@ -199,11 +199,11 @@ class foregroundTemplate extends BaseTemplate {
 		<div class="row">
 				<div id="p-cactions" class="large-12 columns">
 					<?php if ($wgUser->isLoggedIn() || $wgForegroundFeatures['showActionsForAnon']): ?>
-						<a href="#" data-dropdown="drop1" class="button dropdown small secondary radius"><i class="fa fa-cog"><span class="show-for-medium-up">&nbsp;<?php echo wfMessage( 'actions' )->text() ?></span></i></a>
+						<a href="#" class="button dropdown small secondary radius"><i class="fa fa-cog"><span class="show-for-medium-up">&nbsp;<?php echo wfMessage( 'actions' )->text() ?></span></i></a>
 						<!--RTL -->
 						<ul id="drop1" class="views large-12 columns right f-dropdown">
 							<?php foreach( $this->data['content_actions'] as $key => $item ) { echo preg_replace(array('/\sprimary="1"/','/\scontext="[a-z]+"/','/\srel="archives"/'),'',$this->makeListItem($key, $item)); } ?>
-							<?php wfRunHooks( SkinTemplateToolboxEnd, array( &$this, true ) );  ?>
+							<?php wfRunHooks( 'SkinTemplateToolboxEnd', array( &$this, true ) );  ?>
 						</ul>
 						<!--RTL -->
 						<?php if ($wgUser->isLoggedIn()): ?>

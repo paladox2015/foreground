@@ -489,6 +489,9 @@ li label.inline {
   padding: 0;
 }
 
+a:hover, a:focus {
+	text-decoration: none !important;
+}
 button, .button {
   margin: 0.5em 0;
   padding: 0.3em 0.75em 0.4em 0.75em;

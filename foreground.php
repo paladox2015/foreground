@@ -53,11 +53,18 @@ $wgResourceModules['skins.foreground.styles'] = array(
 	),
 );
 
+$wgResourceModules['skins.foreground.modernizr'] = array(
+	'position'       => 'top',
+	'scripts'        => array(
+		'foreground/assets/scripts/vendor/modernizr.js'
+	),
+	'remoteBasePath' => &$GLOBALS['wgStylePath'],
+	'localBasePath'  => &$GLOBALS['wgStyleDirectory']
+);
+
 $wgResourceModules['skins.foreground.js'] = array(
 	'position'       => 'top',
 	'scripts'        => array(
-		'foreground/assets/scripts/vendor/jquery.cookie.foreground.js',
-		'foreground/assets/scripts/vendor/modernizr.js',
 		'foreground/assets/scripts/vendor/fastclick.js',
 		'foreground/assets/scripts/vendor/placeholder.js',
 		'foreground/assets/scripts/foundation/foundation.js',
@@ -78,6 +85,11 @@ $wgResourceModules['skins.foreground.js'] = array(
 		'foreground/assets/scripts/foundation/foundation.accordion.js',
 		'foreground/assets/scripts/foundation/foundation.abide.js',
 		'foreground/assets/scripts/foreground.js',
+	),
+	'dependencies'   => array(
+		'jquery.cookie',
+		'skins.foreground.modernizr',
+		'skins.foreground.styles'
 	),
 	'remoteBasePath' => &$GLOBALS['wgStylePath'],
 	'localBasePath'  => &$GLOBALS['wgStyleDirectory']
