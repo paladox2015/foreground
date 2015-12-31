@@ -39,7 +39,7 @@ class Skinforeground extends SkinTemplate {
 					header('X-UA-Compatible: IE=edge');
 				break;
 		}
-		$out->addModuleStyles('skins.foreground');
+		$out->addModuleStyles('skins.foreground.styles');
 	}
 
 	public function initPage( OutputPage $out ) {
@@ -47,8 +47,8 @@ class Skinforeground extends SkinTemplate {
 		parent::initPage($out);
 
 		$viewport_meta = 'width=device-width, user-scalable=yes, initial-scale=1.0';
-	  $out->addMeta('viewport', $viewport_meta);
-		$out->addModuleScripts('skins.foreground');
+		$out->addMeta('viewport', $viewport_meta);
+		$out->addModules('skins.foreground.js');
 	}
 
 }
@@ -86,13 +86,13 @@ class foregroundTemplate extends BaseTemplate {
 		}
 ?>
 <!-- START FOREGROUNDTEMPLATE -->
-		<nav class="top-bar">
+		<nav class="top-bar" data-topbar role="navigation">
 			<ul class="title-area">
 				<li class="name">
 					<h1 class="title-name">
 					<a href="<?php echo $this->data['nav_urls']['mainpage']['href']; ?>">
 					<?php if ($wgForegroundFeatures['navbarIcon'] != '0') { ?>
-						<img alt="<?php echo $this->text('sitename'); ?>" src="<?php echo $this->text('logopath') ?>" style="max-width: 64px;height:auto; max-height:36px; display: inline-block; vertical-align:middle;">
+						<img alt="<?php echo $this->text('sitename'); ?>" class="top-bar-logo" src="<?php echo $this->text('logopath') ?>">
 					<?php } ?>					
 					<div class="title-name" style="display: inline-block;"><?php echo $wgForegroundFeatures['wikiName']; ?></div>
 					</a>
@@ -106,7 +106,7 @@ class foregroundTemplate extends BaseTemplate {
 		<section class="top-bar-section">
 
 			<ul id="top-bar-left" class="left">
-				<li class="divider"></li>
+				<li class="divider show-for-small"></li>
 					<?php foreach ( $this->getSidebar() as $boxName => $box ) { if ( ($box['header'] != wfMessage( 'toolbox' )->text())  ) { ?>
 				<li class="has-dropdown active"  id='<?php echo Sanitizer::escapeId( $box['id'] ) ?>'<?php echo Linker::tooltip( $box['id'] ) ?>>
 					<a href="#"><?php echo htmlspecialchars( $box['header'] ); ?></a>
@@ -121,7 +121,7 @@ class foregroundTemplate extends BaseTemplate {
 			<ul id="top-bar-right" class="right">
 				<li class="has-form">
 					<form action="<?php $this->text( 'wgScript' ); ?>" id="searchform" class="mw-search">
-						<div class="row">
+						<div class="row collapse">
 						<div class="small-12 columns">
 							<?php echo $this->makeSearchInput(array('placeholder' => wfMessage('searchsuggest-search')->text(), 'id' => 'searchInput') ); ?>
 							<button type="submit" class="button search"><?php echo wfMessage( 'search' )->text() ?></button>
@@ -130,39 +130,25 @@ class foregroundTemplate extends BaseTemplate {
 					</form>
 				</li>
 				<li class="divider show-for-small"></li>
-				<li class="has-form">
 
 				<li class="has-dropdown active"><a href="#"><i class="fa fa-cogs"></i></a>
 					<ul id="toolbox-dropdown" class="dropdown">
 						<?php foreach ( $this->getToolbox() as $key => $item ) { echo $this->makeListItem($key, $item); } ?>
 						<?php if ($wgForegroundFeatures['showRecentChangesUnderTools']): ?><li id="n-recentchanges"><?php echo Linker::specialLink('Recentchanges') ?></li><?php endif; ?>
-						<?php if ($wgForegroundFeatures['showHelpUnderTools']): ?><li id="n-help" <?php echo Linker::tooltip('help') ?>><a href="/wiki/Help:Contents"><?php echo wfMessage( 'help' )->text() ?></a></li><?php endif; ?>
+						<?php if ($wgForegroundFeatures['showHelpUnderTools']): ?><li id="n-help" <?php echo Linker::tooltip('help') ?>><a href="<?php echo Skin::makeInternalOrExternalUrl( wfMessage( 'helppage' )->inContentLanguage()->text() )?>"><?php echo wfMessage( 'help' )->text() ?></a></li><?php endif; ?>
 					</ul>
 				</li>
 
-				<?php if ($wgUser->isLoggedIn()): ?>
 				<li id="personal-tools-dropdown" class="has-dropdown active"><a href="#"><i class="fa fa-user"></i></a>
 					<ul class="dropdown">
 						<?php foreach ( $this->getPersonalTools() as $key => $item ) { echo $this->makeListItem($key, $item); } ?>
 					</ul>
 				</li>
 
-						<?php else: ?>
-							<li>
-								<?php if (isset($this->data['personal_urls']['anonlogin'])): ?>
-								<a href="<?php echo $this->data['personal_urls']['anonlogin']['href']; ?>"><?php echo wfMessage( 'login' )->text() ?></a>
-								<?php elseif (isset($this->data['personal_urls']['login'])): ?>
-									<a href="<?php echo htmlspecialchars($this->data['personal_urls']['login']['href']); ?>"><?php echo wfMessage( 'login' )->text() ?></a>
-									<?php else: ?>
-										<?php echo Linker::link(Title::newFromText('Special:UserLogin'), wfMessage( 'login' )->text()); ?>
-									<?php endif; ?>
-							</li>
-
-				<?php endif; ?>
-
 			</ul>
 		</section>
 		</nav>
+		
 		<?php if ($wgForegroundFeatures['NavWrapperType'] != '0') echo "</div>"; ?>
 		
 		<div id="page-content">
@@ -182,13 +168,18 @@ class foregroundTemplate extends BaseTemplate {
 		<div class="row">
 				<div id="p-cactions" class="large-12 columns">
 					<?php if ($wgUser->isLoggedIn() || $wgForegroundFeatures['showActionsForAnon']): ?>
-						<a href="#" data-dropdown="drop1" class="button dropdown small secondary radius"><i class="fa fa-cog"><span class="show-for-medium-up">&nbsp;<?php echo wfMessage( 'actions' )->text() ?></span></i></a>
-						<ul id="drop1" class="views large-12 columns f-dropdown">
+						<a id="actions-button" href="#" data-dropdown="actions" data-options="align:left; is_hover: true; hover_timeout:700" class="button small secondary radius"><i class="fa fa-cog"><span class="show-for-medium-up">&nbsp;<?php echo wfMessage( 'actions' )->text() ?></span></i></a>
+						<!--RTL -->
+						<ul id="actions" class="f-dropdown" data-dropdown-content>
 							<?php foreach( $this->data['content_actions'] as $key => $item ) { echo preg_replace(array('/\sprimary="1"/','/\scontext="[a-z]+"/','/\srel="archives"/'),'',$this->makeListItem($key, $item)); } ?>
-							<?php wfRunHooks( SkinTemplateToolboxEnd, array( &$this, true ) );  ?>
+							<?php wfRunHooks( 'SkinTemplateToolboxEnd', array( &$this, true ) );  ?>
 						</ul>
+						<!--RTL -->
 						<?php if ($wgUser->isLoggedIn()): ?>
-							<div id="echo-notifications"></div>
+							<div id="echo-notifications">
+							<div id="echo-notifications-alerts"></div>
+							<div id="echo-notifications-messages"></div>
+							</div>
 						<?php endif; ?>
 					<?php endif;
 					$namespace = str_replace('_', ' ', $this->getSkin()->getTitle()->getNsText());
@@ -198,16 +189,18 @@ class foregroundTemplate extends BaseTemplate {
 						$newtitle = str_replace($namespace.':', '', $pagetitle);
 						$displaytitle = str_replace($pagetitle, $newtitle, $displaytitle);
 					?><h4 class="namespace label"><?php print $namespace; ?></h4><?php } ?>
-					<h2 class="title"><?php print $displaytitle; ?></h2>
+					<div id="content">
+					<h2  id="firstHeading" class="title"><?php print $displaytitle; ?></h2>
 					<?php if ( $this->data['isarticle'] ) { ?><h3 id="tagline"><?php $this->msg( 'tagline' ) ?></h3><?php } ?>
-					<h5 class="subtitle"><?php $this->html('subtitle') ?></h5>
-					<div class="clear_both"></div>
-					<div class="mw-bodytext">
+					<h5 id="siteSub" class="subtitle"><?php $this->html('subtitle') ?></h5>
+					<div id="contentSub" class="clear_both"></div>
+					<div id="bodyContent" class="mw-bodytext">
 						<?php $this->html('bodytext') ?>
 						<div class="clear_both"></div>
 					</div>
 		    	<div class="group"><?php $this->html('catlinks'); ?></div>
 		    	<?php $this->html('dataAfterContent'); ?>
+				</div>
 		    </div>
 		</div>
 

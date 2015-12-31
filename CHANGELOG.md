@@ -1,3 +1,34 @@
+## Version 2.0
+
+* [feature] [b/c break] Upgrade to Foundation 5.5.3 (Foundation Tabs have a coding change to build tabs on pages)
+* [code] [b/c break] Use the help page set with MediaWiki:Helppage
+* [feature] [code] Remove "Login" word for annon users, dropdown for log in and create account links
+* [icons] Update to Font Awesome 4.5
+* [icons] Missing icons for Visual Editor, CiteThisPage, et al were added
+* [feature] Support of more menu items in top-bar, flows automatically
+* [code] Hard set of logo icon in top-bar now controlled by CSS in foreground.css file (can be overridden)
+* [code] Actions button on_hover is using native Foundation 5 on_hover (regression in Foundation 5 caused move on_hover to left instead of bottom) 
+* [code] Echo div container divided with div for alerts and div for messages (MW Flow extension compatible)
+* [bug fix] Visual Editor z-index issue, toolbar and widget sizing
+* [code] z-index values for z-indexed elements re-indexed appropriately
+
+## Version 1.2
+
+* [compatibility] Update skin for skin registration on MW 1.25 and higher
+* [compatibility] Backwards compatibility with MediaWiki Versions prior to 1.25
+* [bug fix] Fixed Echo extension compatibility with recent release
+* [documentation] Update Readme.md
+* [language] Update Fr-fr translation string
+* [development] Addition of Travis and Scrutinizer
+* [code] Resource module position explicitly set
+* [code] Fixes for execution paths
+* [feature] Support for Visual Editor
+* [icons] Font Awesome update to 4.2, better icons for ULS and page history
+* [code] CSS fix for invasive ULS CSS, removed style for SiteNotice now user controlled
+* [language] Update to language files, now uses .json files to load translations
+* [bug fix] H3 larger than H2 on small screens
+* [bug fix] Missing indicator.gif spinner image
+
 ## Version 1.1
 
 * [feature] Addition of Social Media Follow Icons using AddThis horizontal follow bar

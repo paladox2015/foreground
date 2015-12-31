@@ -2,11 +2,14 @@
 
 [MediaWiki](http://www.mediawiki.org) skin that focuses on putting your content in the *foreground*. Supports responsive layouts and has classes predefined for [Semantic MediaWiki](http://semantic-mediawiki.org/wiki/Semantic_MediaWiki). Built on the [Zurb Foundation](http://foundation.zurb.com) CSS framework.
 
+[![Build Status](https://travis-ci.org/thingles/foreground.svg?branch=develop)](https://travis-ci.org/thingles/foreground) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/thingles/foreground/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/thingles/foreground/?branch=develop)
+
+
 ## Download
 
 First, copy the Foreground source files into your MediaWiki skins directory (see [skinning](https://www.mediawiki.org/wiki/Manual:Skinning) for general information on MediaWiki skins). You can either download the files and extract them from:
 
-    https://github.com/thingles/foreground/archive/master.zip
+    https://github.com/thingles/foreground/archive/develop.zip
 
 You should extract that into a folder named `foreground` in your `skins` directory.
 
@@ -18,9 +21,11 @@ After that, you can issue `git pull` to update the code at anytime.
 
 ## Setup
 
-Once the skin is in place add the following line to your `LocalSettings.php` file.
+Once the skin is in place add one the following lines to your `LocalSettings.php` file depending on the version of MediaWiki you are using.
 
-    require_once "$IP/skins/foreground/foreground.php";
+    require_once "$IP/skins/foreground/foreground.php"; //MW versions < 1.25.x
+	
+	wfLoadSkin( 'foreground' ); //MW versions 1.25 and higher
 
 This will activate Foreground in your installation. At this point you can select it as a user skin in your user preferences.
 
@@ -55,7 +60,7 @@ These are the default values:
       'showFooterIcons' => 0,
       'addThisFollowPUBID' => ''
     );
-
+	
 ### Usage of NavWrapperType
 
 With a setting like:
@@ -83,6 +88,10 @@ With a setting like:
 A top navbar icon will be set using the current image set by `$wgLogo` in `LocalSettings.php`. See http://www.mediawiki.org/wiki/Manual:$wgLogo for more information about `$wgLogo`.
 
 The icon will be resized to fit into a maximum width of 64px x 36px wide or a 16:9 ratio.
+
+### Show Help under Tools
+
+This will add the help link under tools. To control what the help link will link to use the message page, `MediaWiki:Helppage` to set the link target. The link target can be a local page, Help:Contents, or an external URL, https://www.mediawiki.org/wiki/Help:Contents.
 
 ### AddThis Buttons
 
